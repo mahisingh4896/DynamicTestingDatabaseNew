@@ -10,6 +10,7 @@ public class readCSVFile {
     public static void main(String[] arg) {
         //Method to load CSV file and read data
         HashMap<String, String> detailsMap = new HashMap<String, String>();
+        //Store the details of Cosmos Database
         detailsMap = csvReader("C:\\Users\\MahipalSingh\\Documents\\ConfigCSV.csv");
         System.out.println("Map Value :: "+detailsMap);
     }

@@ -32,7 +32,7 @@ public class readCSVFile {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+        	System.out.printf("Exception caught in csvReader due to :: "+e.getMessage(),e);
         }
         return map;
     }

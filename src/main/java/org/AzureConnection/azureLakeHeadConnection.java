@@ -37,10 +37,16 @@ public class azureLakeHeadConnection {
         StorageSharedKeyCredential credential = new StorageSharedKeyCredential(accountName, accountKey);
 
         // Create a DataLakeFileSystemClient object using the credential
-        DataLakeFileSystemClient fileSystemClient = new DataLakeServiceClientBuilder()
-                .endpoint(directoryNAme)
-                .credential(credential).buildClient()
-                .getFileSystemClient(fileSystemName);
+        DataLakeFileSystemClient fileSystemClient = null;
+		try {
+			fileSystemClient = new DataLakeServiceClientBuilder()
+			        .endpoint(directoryNAme)
+			        .credential(credential).buildClient()
+			        .getFileSystemClient(fileSystemName);
+		} catch (Exception e) {
+			System.out.printf("Exception caught in creating new DatalakeServiceClientBuilder method due to :: "+e.getMessage(),e);;
+
+		}
 
         System.out.println("Connection 1::"+fileSystemClient.getFileSystemName());
         System.out.println("Connection 2::"+fileSystemClient.getFileClient(fileName));
@@ -63,16 +69,23 @@ public class azureLakeHeadConnection {
         saveIndustryNameMainMethod = ReadFile();
     }
 
-    public static void DownloadFile(DataLakeFileSystemClient fileSystemClient)
-            throws FileNotFoundException, IOException{
-        DataLakeDirectoryClient directoryClient =
-                fileSystemClient.getDirectoryClient("");
-        DataLakeFileClient fileClient =
-                directoryClient.getFileClient("sample.json");
-        File file = new File("C:\\Users\\MahipalSingh\\Documents\\downloadedFile.json");
-        OutputStream targetStream = new FileOutputStream(file);
-        fileClient.read(targetStream);
-        targetStream.close();
+    public static void DownloadFile(DataLakeFileSystemClient fileSystemClient){
+    	
+        try {
+			DataLakeDirectoryClient directoryClient =
+			        fileSystemClient.getDirectoryClient("");
+			DataLakeFileClient fileClient =
+			        directoryClient.getFileClient("sample.json");
+			File file = new File("C:\\Users\\MahipalSingh\\Documents\\downloadedFile.json");
+			OutputStream targetStream = new FileOutputStream(file);
+			fileClient.read(targetStream);
+			targetStream.close();
+		} catch (FileNotFoundException e) {
+			System.out.printf("Exception caught in DownloadFile method due to :: "+e.getMessage(),e);;
+		} catch (IOException e) {
+			System.out.printf("IO Exception caught in DownloadFile method due to :: "+e.getMessage(),e);;
+
+		}
     }
 
     public static String ReadFile(){
@@ -92,7 +105,7 @@ public class azureLakeHeadConnection {
             }
             return saveIndustryNameReadFile;
         } catch (Exception e) {
-            e.printStackTrace();
+			System.out.printf("Exception caught in ReadFile method due to :: "+e.getMessage(),e);;
             return null;
         }
     }

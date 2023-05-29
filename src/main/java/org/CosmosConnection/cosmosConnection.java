@@ -27,10 +27,16 @@ public class cosmosConnection {
                 .endpoint(ENDPOINT)
                 .key(KEY);
 
-        CosmosClient client = clientBuilder.buildClient();
+        CosmosClient client = null;
+		CosmosContainer container = null;
+		try {
+			client = clientBuilder.buildClient();
 
-        CosmosDatabase database = client.getDatabase(DATABASE_NAME);
-        CosmosContainer container = database.getContainer(CONTAINER_NAME);
+			CosmosDatabase database = client.getDatabase(DATABASE_NAME);
+			container = database.getContainer(CONTAINER_NAME);
+		} catch (Exception e) {
+			System.out.printf("Exception Caught in cosmosConnection while getting database entries due to :: "+ e.getMessage(),e);
+		}
 
         String query = "SELECT * FROM Items";
         CosmosQueryRequestOptions options = new CosmosQueryRequestOptions();
